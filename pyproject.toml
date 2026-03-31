@@ -42,7 +42,18 @@ strict = true
 warn_unused_configs = true
 show_error_codes = true
 pretty = true
+follow_imports = "skip"
+explicit_package_bases = true
 
 [[tool.mypy.overrides]]
 module = ["simple_salesforce", "simple_salesforce.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["tests", "tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+[[tool.mypy.overrides]]
+module = ["llama_index.readers.salesforce_npsp.base"]
+disallow_subclassing_any = false

@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -5,7 +6,7 @@ import pytest
 from llama_index.readers.salesforce_npsp import SalesforceNPSPReader
 
 
-def _contact_record() -> dict:
+def _contact_record() -> dict[str, Any]:
     return {
         "attributes": {"type": "Contact"},
         "Id": "003ABC",
@@ -25,7 +26,7 @@ def _contact_record() -> dict:
     }
 
 
-def _opportunity_record() -> dict:
+def _opportunity_record() -> dict[str, Any]:
     return {
         "attributes": {"type": "Opportunity"},
         "Id": "006XYZ",
@@ -39,7 +40,9 @@ def _opportunity_record() -> dict:
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_missing_credentials_raises_value_error(mock_salesforce_class, monkeypatch):
+def test_missing_credentials_raises_value_error(
+    mock_salesforce_class: MagicMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.delenv("SF_USERNAME", raising=False)
     monkeypatch.delenv("SF_PASSWORD", raising=False)
     monkeypatch.delenv("SF_TOKEN", raising=False)
@@ -51,7 +54,9 @@ def test_missing_credentials_raises_value_error(mock_salesforce_class, monkeypat
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_load_data_maps_pr_logic_into_documents(mock_salesforce_class):
+def test_load_data_maps_pr_logic_into_documents(
+    mock_salesforce_class: MagicMock,
+) -> None:
     mock_client = MagicMock()
     mock_client.query_all.side_effect = [
         {"records": [_contact_record()]},
@@ -78,7 +83,9 @@ def test_load_data_maps_pr_logic_into_documents(mock_salesforce_class):
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_include_opportunities_false_makes_single_query(mock_salesforce_class):
+def test_include_opportunities_false_makes_single_query(
+    mock_salesforce_class: MagicMock,
+) -> None:
     mock_client = MagicMock()
     mock_client.query_all.return_value = {"records": [_contact_record()]}
     mock_salesforce_class.return_value = mock_client
@@ -96,9 +103,12 @@ def test_include_opportunities_false_makes_single_query(mock_salesforce_class):
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_contact_ids_are_applied_to_query(mock_salesforce_class):
+def test_contact_ids_are_applied_to_query(mock_salesforce_class: MagicMock) -> None:
     mock_client = MagicMock()
-    mock_client.query_all.side_effect = [{"records": [_contact_record()]}, {"records": []}]
+    mock_client.query_all.side_effect = [
+        {"records": [_contact_record()]},
+        {"records": []},
+    ]
     mock_salesforce_class.return_value = mock_client
 
     reader = SalesforceNPSPReader(
@@ -113,7 +123,9 @@ def test_contact_ids_are_applied_to_query(mock_salesforce_class):
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_affinity_score_added_and_errors_handled(mock_salesforce_class):
+def test_affinity_score_added_and_errors_handled(
+    mock_salesforce_class: MagicMock,
+) -> None:
     mock_client = MagicMock()
     mock_client.query_all.side_effect = [
         {"records": [_contact_record()]},
@@ -141,7 +153,9 @@ def test_affinity_score_added_and_errors_handled(mock_salesforce_class):
 
 
 @patch("llama_index.readers.salesforce_npsp.base.Salesforce")
-def test_empty_contact_response_returns_empty_list(mock_salesforce_class):
+def test_empty_contact_response_returns_empty_list(
+    mock_salesforce_class: MagicMock,
+) -> None:
     mock_client = MagicMock()
     mock_client.query_all.return_value = {"records": []}
     mock_salesforce_class.return_value = mock_client

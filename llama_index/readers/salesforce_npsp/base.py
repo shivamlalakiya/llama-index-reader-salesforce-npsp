@@ -2,12 +2,11 @@
 
 import functools
 import os
-from typing import Any, Callable, Dict, List, Optional
-
-from simple_salesforce import Salesforce
+from typing import Any, Callable, Optional
 
 from llama_index.core.readers.base import BaseReader
 from llama_index.core.schema import Document
+from simple_salesforce import Salesforce
 
 
 class SalesforceNPSPReader(BaseReader):
@@ -24,7 +23,7 @@ class SalesforceNPSPReader(BaseReader):
         security_token: Optional[str] = None,
         domain: str = "login",
         include_opportunities: bool = True,
-        affinity_score_fn: Optional[Callable[[Dict[str, Any]], float]] = None,
+        affinity_score_fn: Optional[Callable[[dict[str, Any]], float]] = None,
     ) -> None:
         self.username = username or os.environ.get("SF_USERNAME")
         self.password = password or os.environ.get("SF_PASSWORD")
@@ -50,7 +49,7 @@ class SalesforceNPSPReader(BaseReader):
 
     def _build_contact_soql(
         self,
-        contact_ids: Optional[List[str]],
+        contact_ids: Optional[list[str]],
         soql_filter: str,
         limit: int,
     ) -> str:
@@ -83,8 +82,8 @@ class SalesforceNPSPReader(BaseReader):
 
     def _build_opportunity_map(
         self,
-        contact_ids: List[str],
-    ) -> Dict[str, List[Dict]]:
+        contact_ids: list[str],
+    ) -> dict[str, list[dict[str, Any]]]:
         if not contact_ids:
             return {}
 
@@ -101,14 +100,14 @@ class SalesforceNPSPReader(BaseReader):
               AND IsWon = TRUE
             ORDER BY CloseDate DESC
         """
-        opp_map: Dict[str, List[Dict]] = {}
+        opp_map: dict[str, list[dict[str, Any]]] = {}
         for opp in self._sf.query_all(opp_soql)["records"]:
             cid = opp.get("Primary_Contact__c")
             if cid:
                 opp_map.setdefault(cid, []).append(opp)
         return opp_map
 
-    def _format_gift_history(self, opportunities: List[Dict]) -> str:
+    def _format_gift_history(self, opportunities: list[dict[str, Any]]) -> str:
         if not opportunities:
             return ""
         lines = []
@@ -126,8 +125,8 @@ class SalesforceNPSPReader(BaseReader):
 
     def _build_document(
         self,
-        contact: Dict,
-        opp_map: Dict[str, List[Dict]],
+        contact: dict[str, Any],
+        opp_map: dict[str, list[dict[str, Any]]],
     ) -> Document:
         cid = contact["Id"]
         first = contact.get("FirstName") or ""
@@ -169,7 +168,7 @@ Engagement:
   Last CRM activity:       {last_activity}
 {gift_history_text}""".strip()
 
-        metadata: Dict[str, Any] = {
+        metadata: dict[str, Any] = {
             "donor_id": cid,
             "donor_name": name,
             "email": contact.get("Email") or "",
@@ -197,15 +196,15 @@ Engagement:
 
     def load_data(
         self,
-        contact_ids: Optional[List[str]] = None,
+        contact_ids: Optional[list[str]] = None,
         soql_filter: str = "npo02__TotalOppAmount__c > 0",
         limit: int = 500,
-    ) -> List[Document]:
+    ) -> list[Document]:
         """Load donor records from Salesforce NPSP as LlamaIndex documents."""
         soql = self._build_contact_soql(contact_ids, soql_filter, limit)
         contacts = self._sf.query_all(soql)["records"]
 
-        opp_map: Dict[str, List[Dict]] = {}
+        opp_map: dict[str, list[dict[str, Any]]] = {}
         if self.include_opportunities and contacts:
             cids = [c["Id"] for c in contacts]
             opp_map = self._build_opportunity_map(cids)
