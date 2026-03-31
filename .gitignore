@@ -6,6 +6,8 @@ __pycache__/
 # Distribution / packaging
 build/
 dist/
+site/
+pip-wheel-metadata/
 *.egg-info/
 .eggs/
 *.egg
@@ -24,6 +26,7 @@ ENV/
 htmlcov/
 .tox/
 .nox/
+coverage.xml
 
 # Type checkers / linters
 .mypy_cache/
@@ -34,6 +37,9 @@ htmlcov/
 # IDE / editor
 .idea/
 .vscode/
+
+# Notebooks
+.ipynb_checkpoints/
 
 # OS files
 .DS_Store
