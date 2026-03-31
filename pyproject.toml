@@ -14,5 +14,9 @@ dependencies = [
   "simple-salesforce>=1.12.5",
 ]
 
+[project.urls]
+Homepage = "https://github.com/shivamlalakiya/llama-index-reader-salesforce-npsp"
+Repository = "https://github.com/shivamlalakiya/llama-index-reader-salesforce-npsp"
+
 [tool.hatch.build.targets.wheel]
 packages = ["llama_index"]
