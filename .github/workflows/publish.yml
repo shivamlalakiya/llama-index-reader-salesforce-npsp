@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+    environment:
+      name: release
+      url: https://pypi.org/p/llama-index-reader-salesforce-npsp
 
     steps:
       - name: Checkout code
