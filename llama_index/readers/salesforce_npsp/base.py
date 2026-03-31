@@ -2,7 +2,8 @@
 
 import functools
 import os
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 from llama_index.core.readers.base import BaseReader
 from llama_index.core.schema import Document
@@ -18,12 +19,12 @@ class SalesforceNPSPReader(BaseReader):
 
     def __init__(
         self,
-        username: Optional[str] = None,
-        password: Optional[str] = None,
-        security_token: Optional[str] = None,
+        username: str | None = None,
+        password: str | None = None,
+        security_token: str | None = None,
         domain: str = "login",
         include_opportunities: bool = True,
-        affinity_score_fn: Optional[Callable[[dict[str, Any]], float]] = None,
+        affinity_score_fn: Callable[[dict[str, Any]], float] | None = None,
     ) -> None:
         self.username = username or os.environ.get("SF_USERNAME")
         self.password = password or os.environ.get("SF_PASSWORD")
@@ -49,7 +50,7 @@ class SalesforceNPSPReader(BaseReader):
 
     def _build_contact_soql(
         self,
-        contact_ids: Optional[list[str]],
+        contact_ids: list[str] | None,
         soql_filter: str,
         limit: int,
     ) -> str:
@@ -196,7 +197,7 @@ Engagement:
 
     def load_data(
         self,
-        contact_ids: Optional[list[str]] = None,
+        contact_ids: list[str] | None = None,
         soql_filter: str = "npo02__TotalOppAmount__c > 0",
         limit: int = 500,
     ) -> list[Document]:

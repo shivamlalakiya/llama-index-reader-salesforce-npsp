@@ -7,7 +7,7 @@ name = "llama-index-reader-salesforce-npsp"
 version = "0.1.0"
 description = "A Salesforce NPSP data reader for LlamaIndex to empower data-driven fundraising intelligence."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [{ name = "Shivam Ashokbhai Lalakiya" }]
 dependencies = [
   "llama-index-core>=0.10.0",
@@ -31,13 +31,14 @@ packages = ["llama_index"]
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py310"
+extend-exclude = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "ASYNC"]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 strict = true
 warn_unused_configs = true
 show_error_codes = true

@@ -31,3 +31,7 @@ vip_documents = reader.load_data(contact_ids=["003XXXXXXXXXXXX", "003YYYYYYYYYYY
 
 print(f"Loaded {len(documents)} Salesforce records.")
 ```
+
+## Example notebooks
+
+- `examples/salesforce_npsp_fundraising_qa.ipynb`: end-to-end RAG pipeline walkthrough using NPSP fundraising data, from reader ingestion to question-answering over donor records.
