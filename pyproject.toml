@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llama-index-reader-salesforce-npsp"
+version = "0.1.0"
+description = "A Salesforce NPSP data reader for LlamaIndex to empower data-driven fundraising intelligence."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Shivam Ashokbhai Lalakiya" }]
+dependencies = [
+  "llama-index-core>=0.10.0",
+  "simple-salesforce>=1.12.5",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["llama_index"]
