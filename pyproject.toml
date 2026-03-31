@@ -14,9 +14,35 @@ dependencies = [
   "simple-salesforce>=1.12.5",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.23.0",
+  "ruff>=0.6.0",
+  "mypy>=1.10.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/shivamlalakiya/llama-index-reader-salesforce-npsp"
 Repository = "https://github.com/shivamlalakiya/llama-index-reader-salesforce-npsp"
 
 [tool.hatch.build.targets.wheel]
 packages = ["llama_index"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_unused_configs = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = ["simple_salesforce", "simple_salesforce.*"]
+ignore_missing_imports = true
